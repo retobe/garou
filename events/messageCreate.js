@@ -49,7 +49,7 @@ client.on("messageCreate", async (message) => {
         }
         if (
           !message.guild.members.cache
-            .get(client.author.id)
+            .get(client.user.id)
             .permissions.has(
               PermissionsBitField.resolve(command.botPerms || [])
             )
