@@ -1,0 +1,7 @@
+{
+	"prefix": ";;",
+	"messages": {
+		"COOLDOWN_MESSAGE": "You are on `<duration>` cooldown!",
+		"CURRENCY_COOLDOWN": "Give it a rest life is not that easy, wait until `<duration>` before using this command again fag."
+	}
+}
