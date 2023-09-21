@@ -10,38 +10,9 @@ const cooldown = new Collection();
 
 client.on("messageCreate", async (message) => {
   if (message.author.bot) return;
-  if (message.content === "<@1002571659443707934>") return message.reply("/help for commands :)")
+  if (message.content === "<@1154519841785532426>") return message.reply("/help for commands :)")
   // creating Databases
-  let guildProfile = await Guild.findOne({ guildId: message.guild.id });
-  let userProfile = await User.findOne({ userId: message.author.id });
-  if (!guildProfile) {
-    guildProfile = await new Guild({
-      _id: mongoose.Types.ObjectId(),
-      guildId: message.guild.id,
-      guildName: message.guild.name,
-      guildIcon: message.guild.iconURL()
-        ? message.guild.iconURL()
-        : "None.",
-    });
-  }
-  if (!userProfile) {
-    userProfile = new User({
-      _id: mongoose.Types.ObjectId(),
-      userId: message.author.id,
-      userIcon: message.author.displayAvatarURL(),
-      userName: message.author.tag,
-      wallet: 0,
-      bank: 0,
-    });
-  }
-  if (!userProfile.userIcon || !userProfile.userName) {
-    userProfile = new User({
-      _id: mongoose.Types.ObjectId(),
-      userId: message.author.id,
-      userIcon: message.author.displayAvatarURL(),
-      userName: message.author.tag,
-    });
-  }
+
   // reading command names
   if (message.channel.type !== 0) return;
   if (!message.content.startsWith(prefix)) return;
