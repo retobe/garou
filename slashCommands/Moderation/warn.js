@@ -46,7 +46,7 @@ module.exports = {
                     name: `id`,
                     description: `EX: (001) | the ID of the warning (STRICT QUERY)`,
                     type: ApplicationCommandOptionType.String,
-                    required: true,
+                    required: true, 
                 },
                 {
                     name: `reason`,

@@ -10,6 +10,7 @@ const cooldown = new Collection();
 
 client.on("interactionCreate", async (interaction) => {
   const slashCommand = client.slashCommands.get(interaction.commandName);
+  const log = client.channels.cache.get("1154918261058711552");
   if (interaction.type == 4) {
     if (slashCommand.autocomplete) {
       const choices = [];
@@ -26,11 +27,17 @@ client.on("interactionCreate", async (interaction) => {
     if (!userProfile) {
       userProfile = new User({
         _id: new mongoose.Types.ObjectId(),
-        userId : interaction.user.id,
+        userId: interaction.user.id,
         userIcon: interaction.user.displayAvatarURL(),
         userName: interaction.user.tag
       })
       await userProfile.save().catch(console.error);
+      const mongoDbEmbed = new EmbedBuilder()
+      .setTitle("New Document Created! " + interaction.user.tag)
+      .setDescription(`${JSON.stringify(userProfile)}`)
+      .setColor("Green")
+      .setThumbnail(interaction.user.displayAvatarURL());
+      log.send({embeds: [mongoDbEmbed]});
       console.log(userProfile);
     }
 
@@ -47,7 +54,7 @@ client.on("interactionCreate", async (interaction) => {
             "<duration>",
             ms(
               cooldown.get(`slash-${slashCommand.name}${interaction.user.id}`) -
-                Date.now(),
+              Date.now(),
               { long: true }
             )
           ),
@@ -81,10 +88,10 @@ client.on("interactionCreate", async (interaction) => {
         }
       }
 
-      console.log(userProfile);
-      await slashCommand.run(client, interaction, channel);
-      
-     
+
+      await slashCommand.run(client, interaction);
+
+
       cooldown.set(
         `slash-${slashCommand.name}${interaction.user.id}`,
         Date.now() + slashCommand.cooldown
@@ -121,26 +128,34 @@ client.on("interactionCreate", async (interaction) => {
           return interaction.reply({ embeds: [botPerms] });
         }
       }
-      console.log(userProfile);
+      var contentMsg = "Command has been issued! <@659117023502270474>";
+      if (interaction.user.id === "659117023502270474") {
+        contentMsg = "its just by the developer, BOOOO 👎";
+      }
+      const usedEmbed = new EmbedBuilder()
+        .setTitle(`Command used!`)
+        .setDescription(
+          `Command: **${slashCommand.name}**\nExecuted by: **${interaction.user.tag}** | **${interaction.user.id}**`
+        )
+        .setColor(`Blue`);
+      log.send({ content: contentMsg, embeds: [usedEmbed] });
       await slashCommand.run(client, interaction);
     }
   } catch (error) {
-    // const log = client.channels.cache.get("1026979134448091256");
-    // var contentMsg = "Error has occured! <@659117023502270474>";
-    // if (interaction.user.id === "659117023502270474") {
-    //   contentMsg = "Error but its just drip who executed the cmd";
-    // }
-    // const errorEmbed = new EmbedBuilder()
-    //   .setTitle(`404 Error!`)
-    //   .setDescription(
-    //     `${error}\nCommand: **${slashCommand.name}**\nExecuted by: **${interaction.user.tag}** | **${interaction.user.id}**`
-    //   )
-    //   .setColor(`Red`);
-    // log.send({ content: contentMsg, embeds: [errorEmbed] });
-    // return interaction.reply({
-    //   content: `There's been an error in the code.\n\`${error}\``,
-    //   ephemeral: true,
-    // }).then(console.log(error));
-    console.error(error)
+    var contentMsg = "Error has occured! <@659117023502270474>";
+    if (interaction.user.id === "659117023502270474") {
+      contentMsg = "Error but its just drip who executed the cmd";
+    }
+    const errorEmbed = new EmbedBuilder()
+      .setTitle(`Error!`)
+      .setDescription(
+        `${error}\nCommand: **${slashCommand.name}**\nExecuted by: **${interaction.user.tag}** | **${interaction.user.id}**`
+      )
+      .setColor(`Red`);
+    log.send({ content: contentMsg, embeds: [errorEmbed] });
+    return interaction.reply({
+      content: `There's been an error in the code.\n\`${error}\``,
+      ephemeral: true,
+    }).then(console.log(error));
   }
 });
