@@ -44,7 +44,7 @@ module.exports = {
                 },
                 {
                     name: `id`,
-                    description: `the ID of the warning`,
+                    description: `EX: (001) | the ID of the warning (STRICT QUERY)`,
                     type: ApplicationCommandOptionType.String,
                     required: true,
                 },
@@ -126,7 +126,7 @@ module.exports = {
                         interaction.reply({ content: `${userToCheck.tag} has no warnings.`, ephemeral: false });
                     } else {
                         const warningList = userDoc.warnings.map((warning, index) => {
-                            const timestamp = new Date(moment(warning.timestamp).format("LLLL")); // Format the timestamp
+                            const timestamp = moment(new Date(warning.timestamp)).format("LLLL"); // Format the timestamp
                             const moderator = warning.moderator || "Unknown"; // Get the moderator's ID or "Unknown" if not available
                             return `${index + 1}. ID: ${warning.id || "Couldn't find an ID"}\n   Reason: ${warning.reason}\n   Timestamp: ${timestamp}\n   ModeratorID: ${moderator}`;
                         });
