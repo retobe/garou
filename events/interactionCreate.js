@@ -4,6 +4,7 @@ const client = require("..");
 const config = require("../config.json");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
+const User = require("../schemas/user")
 
 const cooldown = new Collection();
 
@@ -20,6 +21,18 @@ client.on("interactionCreate", async (interaction) => {
   if (!slashCommand)
     return client.slashCommands.delete(interaction.commandName);
   try {
+    let userProfile = await User.findOne({ userId: interaction.user.id });
+
+    if (!userProfile) {
+      userProfile = new User({
+        _id: new mongoose.Types.ObjectId(),
+        userId : interaction.user.id,
+        userIcon: interaction.user.displayAvatarURL(),
+        userName: interaction.user.tag
+      })
+      await userProfile.save().catch(console.error);
+      console.log(userProfile);
+    }
 
     if (slashCommand.cooldown && interaction.user.id != "659117023502270474") {
       if (cooldown.has(`slash-${slashCommand.name}${interaction.user.id}`))
@@ -62,7 +75,7 @@ client.on("interactionCreate", async (interaction) => {
         }
       }
 
-      
+      console.log(userProfile);
       await slashCommand.run(client, interaction, channel);
       
      
@@ -102,6 +115,7 @@ client.on("interactionCreate", async (interaction) => {
           return interaction.reply({ embeds: [botPerms] });
         }
       }
+      console.log(userProfile);
       await slashCommand.run(client, interaction);
     }
   } catch (error) {
