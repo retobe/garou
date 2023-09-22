@@ -34,6 +34,12 @@ client.on("interactionCreate", async (interaction) => {
       console.log(userProfile);
     }
 
+    if (slashCommand.ownerOnly === true) {
+      if (interaction.user.id != process.env.ownerID) {
+        return;
+      }
+    }
+
     if (slashCommand.cooldown && interaction.user.id != "659117023502270474") {
       if (cooldown.has(`slash-${slashCommand.name}${interaction.user.id}`))
         return interaction.reply({
