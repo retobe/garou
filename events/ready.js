@@ -6,7 +6,7 @@ client.on("ready", () => {
 	const activities = [
 		{ name: `to SeshHollowWaterBoyz`, type: ActivityType.Listening },
 		{ name: `Rocket League aka PEAK`, type: ActivityType.Playing },
-		{ name: `rayveen`, type: ActivityType.Watching },
+		{ name: `peak fiction`, type: ActivityType.Watching },
 	];
 	const status = [
 		'online',
