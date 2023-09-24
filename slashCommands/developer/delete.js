@@ -27,7 +27,7 @@ module.exports = {
 
         // MongoDB deletion logic
         try {
-            const clientMongo = new MongoClient('mongodb+srv://whale_quad:notpassword@cluster0.gfgw6ua.mongodb.net/', { useUnifiedTopology: true });
+            const clientMongo = new MongoClient(process.env.DATABASETOKEN, { useUnifiedTopology: true });
             await clientMongo.connect();
 
             const db = clientMongo.db('test');
