@@ -5,7 +5,7 @@ const config = require("../config.json");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 const User = require("../schemas/user")
-
+const Guild = require("../schemas/guild")
 const cooldown = new Collection();
 
 client.on("interactionCreate", async (interaction) => {
@@ -23,7 +23,21 @@ client.on("interactionCreate", async (interaction) => {
     return client.slashCommands.delete(interaction.commandName);
   try {
     let userProfile = await User.findOne({ userId: interaction.user.id });
+    let guildProfile = await Guild.findOne({ guildId: interaction.guild.id });
 
+    if (!guildProfile) {
+        guildProfile = new Guild({
+            _id: new mongoose.Types.ObjectId(),
+            guildId: interaction.guild.id,
+        });
+        await guildProfile.save().catch(console.error);
+        const mongoDbEmbed = new EmbedBuilder()
+        .setTitle("New Document Created! " + interaction.guild.name)
+        .setDescription(`${JSON.stringify(guildProfile)}`)
+        .setColor("Green")
+        .setThumbnail(interaction.guild.iconURL());
+        log.send({embeds: [mongoDbEmbed]});
+    }
     if (!userProfile) {
       userProfile = new User({
         _id: new mongoose.Types.ObjectId(),

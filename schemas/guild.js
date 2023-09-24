@@ -5,15 +5,14 @@ const guildSchema = new Schema({
   guildName: String,
   guildIcon: { type: String, required: false },
   guildChannelLogs: String,
-  currentUser: String,
   CurrencyEnabled: { type: String, default: "true" }, 
   FunEnabled: { type: String, default: "true" }, 
   InfoEnabled: { type: String, default: "true" }, 
   ModerationEnabled: { type: String, default: "true" }, 
   UtilityEnabled: { type: String, default: "true" }, 
-  guildSnipe: String,
-  guildSnipeID: String,
-  guildSnipeDate: Date,
+  suggestionChannel: {
+    type: String,
+  }
 });
 
 module.exports = model("Guild", guildSchema, "guilds");
