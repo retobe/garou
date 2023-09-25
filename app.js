@@ -38,18 +38,18 @@ fs.readdirSync("./handlers").forEach((handler) => {
   require(`./handlers/${handler}`)(client);
 });
 
-process.on("unhandledRejection", (reason, p) => {
-  console.log(" [antiCrash] :: Unhandled Rejection/Catch");
-});
-process.on("uncaughtException", (err, origin) => {
-  console.log(" [antiCrash] :: Uncaught Exception/Catch");
-});
-process.on("uncaughtExceptionMonitor", (err, origin) => {
-  console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
-});
-process.on("multipleResolves", (type, promise, reason) => {
-  console.log(" [antiCrash] :: Multiple Resolves");
-});
+// process.on("unhandledRejection", (reason, p) => {
+//   console.log(" [antiCrash] :: Unhandled Rejection/Catch");
+// });
+// process.on("uncaughtException", (err, origin) => {
+//   console.log(" [antiCrash] :: Uncaught Exception/Catch");
+// });
+// process.on("uncaughtExceptionMonitor", (err, origin) => {
+//   console.log(" [antiCrash] :: Uncaught Exception/Catch (MONITOR)");
+// });
+// process.on("multipleResolves", (type, promise, reason) => {
+//   console.log(" [antiCrash] :: Multiple Resolves");
+// });
 
 client.login(process.env.TOKEN);
-connect(process.env.DATABASETOKEN).catch(console.error);
+connect(process.env.DATABASETOKEN).catch(console.error); 
