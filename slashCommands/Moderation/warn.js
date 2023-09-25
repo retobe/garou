@@ -77,6 +77,9 @@ module.exports = {
             case "add":
                 try {
                     const userToWarn = interaction.options.getUser("user");
+                    if (userToWarn.bot === true) {
+                        return interaction.reply({content: `Can't warn a API.`, ephemeral: true})
+                    }
                     const reason = interaction.options.getString("reason") || "No reason";
                     const timestamp = new Date();
                     if (userToWarn.id === interaction.user.id) {
