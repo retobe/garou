@@ -139,17 +139,13 @@ module.exports = {
                 var user = interaction.options.getUser("target_user");
                 var amountX = interaction.options.getInteger("amount");
 
-                // Fetch messages sent by the specified user in the channel
-                const messages = await interaction.channel.messages.fetch({ limit: 100 }); // Adjust the limit as needed
+                const messages = await interaction.channel.messages.fetch({ limit: 100 });
 
-                // Filter messages sent by the user
                 const userMessages = messages.filter((message) => message.author.id === user.id);
 
-                // Limit the number of messages to delete
                 const messagesToDelete = userMessages.map((message) => message.id).slice(0, amountX);
 
                 try {
-                    // Bulk delete the selected messages
                     await interaction.channel.bulkDelete(messagesToDelete);
                     interaction.reply(`Deleted ${messagesToDelete.length} messages sent by ${user.tag}.`);
                 } catch (error) {
@@ -158,7 +154,29 @@ module.exports = {
                 }
                 break;
             case "range":
-                interaction.reply(`Still in the works`);
+                var startId = interaction.options.getString("start_id");
+                var endId = interaction.options.getString("end_id");
+                
+                const messages1 = await interaction.channel.messages.fetch();
+                
+                const messagesInRange = messages1.filter((message) => {
+                    const messageId = message.id;
+                
+                    const fetchedMessage = interaction.channel.messages.fetch(messageId).catch(() => null);
+
+                    return fetchedMessage && messageId >= startId && messageId <= endId;
+                });
+                
+                const messagesToDelete2 = messagesInRange.map((message) => message.id);
+                
+                try {
+                    await interaction.channel.bulkDelete(messagesToDelete2);
+                    interaction.reply({ content: `Deleted ${messagesToDelete2.length} messages within the specified range.`, ephemeral: true });
+                } catch (error) {
+                    console.error(error);
+                    interaction.reply("An error occurred while deleting messages.");
+                }
+                
                 break;
             default:
                 interaction.reply("Error 404");
