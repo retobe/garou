@@ -27,12 +27,12 @@ module.exports = {
 
         if (suggestonMessage.length < 4) {
             return interaction.reply({ content: `Your suggestion was too short.`, ephemeral: true })
-        } else if (suggestonMessage.length > 300) {
+        } else if (suggestonMessage.length > 500) {
             return interaction.reply({ content: `Your suggestion was too long.`, ephemeral: true })
         }
         const suggestionEmbed = new EmbedBuilder()
             .setTitle(`New suggestion!`)
-            .setDescription(`${suggestonMessage}`)
+            .setDescription(`>>> ${suggestonMessage}`)
             .setColor("Blue")
             .setFooter({ text: "Suggestion by " + interaction.user.tag, iconURL: interaction.user.displayAvatarURL() })
             .setThumbnail(interaction.guild.iconURL());
