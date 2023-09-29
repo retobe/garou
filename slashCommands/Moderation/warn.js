@@ -6,7 +6,7 @@ const { formatWarningId } = require("../../helpers/Utils")
 module.exports = {
     name: 'warn',
     usage: `/warn <add/remove/check>`,
-    category: `Mod`,
+    category: `Moderation`,
     description: "User's warnings",
     type: ApplicationCommandType.ChatInput,
     options: [

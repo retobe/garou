@@ -3,9 +3,9 @@ const Guild = require("../../schemas/guild");
 const mongoose = require("mongoose");
 module.exports = {
     name: 'suggestion',
-    usage: `/suggestion`,
-    category: `Mod`,
-    description: "Members suggestion for guilds",
+    usage: `/suggestion channel <set/remove/check>`,
+    category: `Moderation`,
+    description: "Set the guild's suggestion channel.",
     userPerms: ["ManageChannels"],
     type: ApplicationCommandType.ChatInput,
     options: [

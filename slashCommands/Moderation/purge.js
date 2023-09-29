@@ -2,8 +2,8 @@ const { ApplicationCommandType, ApplicationCommandOptionType } = require('discor
 
 module.exports = {
     name: 'purge',
-    usage: `/purge <type> <amount>`,
-    category: `Mod`,
+    usage: `/purge <type> [#channel/@user/id_1/id_2] <amount>`,
+    category: `Moderation`,
     userPerms: ["ManageMessages", "ManageChannels"],
     description: "Use this command to delete messages faster.",
     type: ApplicationCommandType.ChatInput,
