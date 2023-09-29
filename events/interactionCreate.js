@@ -18,6 +18,7 @@ client.on("interactionCreate", async (interaction) => {
     }
   }
   if (!interaction.type == 2) return;
+  if (!interaction.guild) return;
 
   if (!slashCommand)
     return client.slashCommands.delete(interaction.commandName);
@@ -26,17 +27,17 @@ client.on("interactionCreate", async (interaction) => {
     let guildProfile = await Guild.findOne({ guildId: interaction.guild.id });
 
     if (!guildProfile) {
-        guildProfile = new Guild({
-            _id: new mongoose.Types.ObjectId(),
-            guildId: interaction.guild.id,
-        });
-        await guildProfile.save().catch(console.error);
-        const mongoDbEmbed = new EmbedBuilder()
+      guildProfile = new Guild({
+        _id: new mongoose.Types.ObjectId(),
+        guildId: interaction.guild.id,
+      });
+      await guildProfile.save().catch(console.error);
+      const mongoDbEmbed = new EmbedBuilder()
         .setTitle("New Document Created! " + interaction.guild.name)
         .setDescription(`${JSON.stringify(guildProfile)}`)
         .setColor("Green")
         .setThumbnail(interaction.guild.iconURL());
-        log.send({embeds: [mongoDbEmbed]});
+      log.send({ embeds: [mongoDbEmbed] });
     }
     if (!userProfile) {
       userProfile = new User({
@@ -47,16 +48,17 @@ client.on("interactionCreate", async (interaction) => {
       })
       await userProfile.save().catch(console.error);
       const mongoDbEmbed = new EmbedBuilder()
-      .setTitle("New Document Created! " + interaction.user.tag)
-      .setDescription(`${JSON.stringify(userProfile)}`)
-      .setColor("Green")
-      .setThumbnail(interaction.user.displayAvatarURL());
-      log.send({embeds: [mongoDbEmbed]});
+        .setTitle("New Document Created! " + interaction.user.tag)
+        .setDescription(`${JSON.stringify(userProfile)}`)
+        .setColor("Green")
+        .setThumbnail(interaction.user.displayAvatarURL());
+      log.send({ embeds: [mongoDbEmbed] });
       console.log(userProfile);
     }
 
     if (slashCommand.ownerOnly === true) {
       if (interaction.user.id != process.env.ownerID) {
+        console.log("Someone has tried to use ownerONLY CMD", interaction.user.tag, interaction.user.id, interaction.guild.name)
         return;
       }
     }

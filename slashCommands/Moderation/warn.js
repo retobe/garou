@@ -8,8 +8,6 @@ module.exports = {
     usage: `/warn <add/remove/check>`,
     category: `Mod`,
     description: "User's warnings",
-    userPerms: "BanMembers",
-    botPerms: ["BanMembers"],
     type: ApplicationCommandType.ChatInput,
     options: [
         {
@@ -38,7 +36,7 @@ module.exports = {
             options: [
                 {
                     name: `user`,
-                    description: `The user you want to warn`,
+                    description: `The user you want to remove warn`,
                     type: ApplicationCommandOptionType.User,
                     required: true,
                 },
@@ -46,11 +44,11 @@ module.exports = {
                     name: `id`,
                     description: `EX: (001) | the ID of the warning (STRICT QUERY)`,
                     type: ApplicationCommandOptionType.String,
-                    required: true, 
+                    required: true,
                 },
                 {
                     name: `reason`,
-                    description: `The reasoning behind the warning`,
+                    description: `The reasoning behind the warning removal`,
                     type: ApplicationCommandOptionType.String,
                     required: false,
                 }
@@ -75,10 +73,13 @@ module.exports = {
         var subCmd = interaction.options.getSubcommand();
         switch (subCmd) {
             case "add":
+                if (!interaction.member.permissions.has("BanMembers")) {
+                    return interaction.reply({ content: "You don't have permission to use this command.", ephemeral: true });
+                }
                 try {
                     const userToWarn = interaction.options.getUser("user");
                     if (userToWarn.bot === true) {
-                        return interaction.reply({content: `Can't warn a API.`, ephemeral: true})
+                        return interaction.reply({ content: `Can't warn a API.`, ephemeral: true })
                     }
                     const reason = interaction.options.getString("reason") || "No reason";
                     const timestamp = new Date();
@@ -144,6 +145,9 @@ module.exports = {
                 break;
             // ...
             case "remove":
+                if (!interaction.member.permissions.has("BanMembers")) {
+                    return interaction.reply({ content: "You don't have permission to use this command.", ephemeral: true });
+                }
                 try {
                     const userToRemoveWarningFrom = interaction.options.getUser("user");
                     const warningIdToRemove = interaction.options.getString("id");
@@ -175,8 +179,8 @@ module.exports = {
                     interaction.reply({ content: "An error occurred while removing the warning.", ephemeral: true });
                 }
                 break;
-                default:
-                    return interaction.reply({ content: "An error occurred.", ephemeral: true });
+            default:
+                return interaction.reply({ content: "An error occurred.", ephemeral: true });
                 break;
         }
     }

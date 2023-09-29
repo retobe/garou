@@ -1,47 +1,50 @@
 const { ApplicationCommandType, ApplicationCommandOptionType } = require('discord.js');
-const { MongoClient } = require('mongodb');
-
+const mongoose = require("mongoose")
 module.exports = {
     name: 'deleteuser',
     usage: `/deleteuser <name>`,
     category: 'Moderation',
-    description: 'Delete a user by name from the database.',
+    description: 'Delete all users with a specific name from the database.',
     type: ApplicationCommandType.ChatInput,
     ownerOnly: true,
     options: [
         {
-            name: 'name',
-            description: 'The name of the user to delete.',
-            type: ApplicationCommandOptionType.String,
+            name: 'user',
+            description: 'The user you want to delete.',
+            type: ApplicationCommandOptionType.User,
             required: true,
         },
     ],
     cooldown: 3000,
     run: async (client, interaction) => {
-        const nameToDelete = interaction.options.getString('name');
+        const userToDelete = interaction.options.getUser('user');
+        console.log(userToDelete.id, userToDelete.name)
 
         // Validate that the user provided a name to delete
-        if (!nameToDelete) {
+        if (!userToDelete.id) {
             return interaction.reply({ content: 'Please provide a name to delete.', ephemeral: true });
         }
 
         // MongoDB deletion logic
         try {
-            const clientMongo = new MongoClient(process.env.DATABASETOKEN, { useUnifiedTopology: true });
-            await clientMongo.connect();
-
-            const db = clientMongo.db('test');
+            const db = mongoose.connection; // Use the existing mongoose connection
             const collection = db.collection('users');
 
             // Define the filter query to match users by name
-            const filter = { userName: nameToDelete };
+            const filter = { userId: userToDelete.id };
 
-            // Delete the documents that match the filter
-            const result = await collection.deleteMany(filter);
+            // Find all documents matching the filter and delete them one by one
+            const deleteResults = await collection.find(filter);
+            let deletedCount = 0;
 
-            await clientMongo.close();
+            for await (const doc of deleteResults) {
+                await collection.deleteOne({ _id: doc._id });
+                deletedCount++;
+            }
 
-            interaction.reply({ content: `Deleted ${result.deletedCount} user(s) with name "${nameToDelete}".`, ephemeral: true });
+            console.log(`Deleted ${deletedCount} user(s) with name "${userToDelete}".`);
+
+            interaction.reply({ content: `Deleted ${deletedCount} user(s) with name "${userToDelete}".`, ephemeral: true });
         } catch (error) {
             console.error('Error deleting users:', error);
             interaction.reply({ content: 'An error occurred while deleting users.', ephemeral: true });

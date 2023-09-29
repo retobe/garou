@@ -43,9 +43,7 @@ module.exports = {
     cooldown: 3000,
     run: async (client, interaction, channel) => {
         const subCmdGrp = interaction.options.getSubcommandGroup();
-        if (!interaction.guild) {
-            return interaction.reply({ content: "This command can only be used in a server (guild)." });
-        }
+
         if (subCmdGrp) {
             const subCmd = interaction.options.getSubcommand();
             switch (subCmd) {
@@ -98,6 +96,9 @@ module.exports = {
                     } else {
                         return interaction.reply({ content: `There is no suggestion channel set for **${interaction.guild.name}**.` });
                     }
+                    break;
+                default:
+                    return interaction.reply({ content: "ERROR", ephemeral: true });
                     break;
             }
 
